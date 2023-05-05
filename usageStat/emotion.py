@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Emotion(Enum):
     Unknown = 0
     Excited = 1
@@ -14,6 +15,7 @@ class Emotion(Enum):
     Depressed = 10
     Bored = 11
     Tired = 12
+
 
 def calc_emotion(valence: int, arousal: int) -> Emotion:
     if valence > 0:
@@ -44,6 +46,7 @@ def calc_emotion(valence: int, arousal: int) -> Emotion:
             return Emotion.Tired
 
     return Emotion.Unknown
+
 
 def get_emoji_from_emotion(emotion: Emotion) -> str:
     match emotion:
