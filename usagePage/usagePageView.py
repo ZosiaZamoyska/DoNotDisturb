@@ -1,5 +1,6 @@
 from dash import html, dcc
 from usagePage.data import UsageData
+from usagePage.emotionWidget.emotion import Emotion, to_emoji
 from usagePage.util import capitalize
 
 
@@ -20,17 +21,21 @@ class UsagePageView:
         notification_widget = self._build_notification_widget()
         pickup_widget = self._build_pickup_widget()
         unlock_widget = self._build_unlock_widget()
+        emotion_emojis_widget = self._build_emotion_emojis_widget()
 
         usage_stat_container = html.Div(
             id="stat-container",
-            children=[notification_widget, pickup_widget, unlock_widget],
+            children=[
+                notification_widget,
+                pickup_widget,
+                unlock_widget,
+                emotion_emojis_widget,
+            ],
         )
-
-        emotion_emojis_widget = self._build_emotion_emojis_widget()
 
         page = html.Div(
             id="stat-page-container",
-            children=[controller_widget, usage_stat_container, emotion_emojis_widget],
+            children=[controller_widget, usage_stat_container],
         )
 
         return page
@@ -39,6 +44,7 @@ class UsagePageView:
         div = html.Div(
             id="controller-container",
             children=[
+                html.H1("Usage Statistics", className="controller-title"),
                 dcc.Dropdown(
                     id="app-dropdown",
                     options=UsageData.get_all_app_names(),
@@ -64,8 +70,8 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "notification-widget",
-                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has notified you",
-                self.get_model().get_notification_count(),
+                f"notified you",
+                f"{self.get_model().get_notification_count()} times",
                 f"That is {notification_percent}% of all notifications.",
             )
 
@@ -83,8 +89,8 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "pickup-widget",
-                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has made you pick up the phone",
-                self.get_model().get_pickup_count(),
+                f"made you pick up the phone",
+                f"{self.get_model().get_pickup_count()} times",
                 f"That is {pickup_percent}% of the time it has notified you.",
             )
 
@@ -102,8 +108,8 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "unlock-widget",
-                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has made you unlock the phone",
-                self.get_model().get_unlock_count(),
+                f"made you unlock the phone",
+                f"{self.get_model().get_unlock_count()} times",
                 f"That is {unlock_percent}% of the time it has made you pick up the phone.",
             )
 
@@ -116,10 +122,11 @@ class UsagePageView:
     ) -> html.Div:
         div = html.Div(
             id=id,
+            className="usage-widget",
             children=[
-                html.H2(title),
-                html.H3(number_times_occured),
-                html.P(description),
+                html.P(title, className="usage-widget-title"),
+                html.P(number_times_occured, className="usage-widget-number"),
+                html.P(description, className="usage-widget-desc"),
             ],
         )
         return div
@@ -133,17 +140,27 @@ class UsagePageView:
 
     def _build_emotion_emojis_widget(self) -> html.Div:
         div = html.Div(
-            [
-                html.H2(
-                    f"You feel these emotions while using {self.get_model().get_current_app_name()}"
+            id="emotion-emojis-widget",
+            children=[
+                html.P(
+                    f"While you are using {self.get_model().get_current_app_name()}, you felt..."
                 ),
                 html.Div(
-                    id="emoji-widget",
+                    id="emojis-container",
                     children=list(
-                        map(lambda e: html.P(e), self.get_model().get_emotion_emojis())
+                        map(
+                            lambda e: html.Div(
+                                className="emoji-container",
+                                children=[
+                                    html.P(className="emoji", children=to_emoji(e)),
+                                    html.P(className="emotion", children=e.value),
+                                ],
+                            ),
+                            self.get_model().get_emotions(),
+                        )
                     ),
                 ),
-            ]
+            ],
         )
         return div
 

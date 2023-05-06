@@ -42,8 +42,8 @@ class UsagePageModel:
     def get_unlock_count(self):
         return self._app_unlock_count
 
-    def get_emotion_emojis(self):
-        return self._app_emotion_emojis
+    def get_emotions(self):
+        return self._app_emotions
 
     def update(self):
         self._all_notification_count = UsageData.get_all_notification_count(
@@ -58,7 +58,8 @@ class UsagePageModel:
         self._app_unlock_count = UsageData.get_unlock_count(
             self.get_current_app_name(), self.get_time_granularity()
         )
-        self._app_emotion_emojis = UsageData.get_emotion_emojis(
+
+        self._app_emotions = UsageData.get_emotions(
             self.get_current_app_name(), self.get_time_granularity()
         )
 

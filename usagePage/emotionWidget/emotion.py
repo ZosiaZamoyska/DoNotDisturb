@@ -2,19 +2,19 @@ from enum import Enum
 
 
 class Emotion(Enum):
-    UNKNOWN = 0
-    EXCITED = 1
-    DELIGHTED = 2
-    HAPPY = 3
-    PLEASED = 4
-    RELAXED = 5
-    SLEEPY = 6
-    TENSE = 7
-    ANGRY = 8
-    FRUSTRATED = 9
-    DEPRESSED = 10
-    BORED = 11
-    TIRED = 12
+    UNKNOWN = "<<Unknown>>"
+    EXCITED = "Excited"
+    DELIGHTED = "Delighted"
+    HAPPY = "Happy"
+    PLEASED = "Pleased"
+    RELAXED = "Relaxed"
+    SLEEPY = "Sleepy"
+    TENSE = "Tense"
+    ANGRY = "Angry"
+    FRUSTRATED = "Frustrated"
+    DEPRESSED = "Depressed"
+    BORED = "Bored"
+    TIRED = "Tired"
 
 
 def calc_emotion(valence: int, arousal: int) -> Emotion:

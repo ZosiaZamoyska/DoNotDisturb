@@ -77,17 +77,20 @@ class UsageData:
         return None
 
     @staticmethod
-    def get_emotion_emojis(
+    def get_emotions(
         app_name: str, time_granularity: UsageTimeGranularity
     ) -> list[str]:
         match (app_name, time_granularity):
             case ("Instagram", UsageTimeGranularity.WEEK):
-                return map(to_emoji, [Emotion.HAPPY, Emotion.DELIGHTED, Emotion.ANGRY])
-            case ("Instagram", UsageTimeGranularity.MONTH):
-                return map(to_emoji, [Emotion.HAPPY, Emotion.DEPRESSED, Emotion.ANGRY])
-            case ("GMail", UsageTimeGranularity.WEEK):
-                return map(to_emoji, [Emotion.BORED, Emotion.SLEEPY, Emotion.TIRED])
-            case ("GMail", UsageTimeGranularity.MONTH):
-                return map(to_emoji, [Emotion.BORED, Emotion.SLEEPY, Emotion.RELAXED])
+                return [Emotion.HAPPY, Emotion.DELIGHTED, Emotion.ANGRY]
 
-        return map(to_emoji, [Emotion.UNKNOWN, Emotion.UNKNOWN, Emotion.UNKNOWN])
+            case ("Instagram", UsageTimeGranularity.MONTH):
+                return [Emotion.HAPPY, Emotion.DEPRESSED, Emotion.ANGRY]
+
+            case ("GMail", UsageTimeGranularity.WEEK):
+                return [Emotion.BORED, Emotion.SLEEPY, Emotion.TIRED]
+
+            case ("GMail", UsageTimeGranularity.MONTH):
+                return [Emotion.BORED, Emotion.SLEEPY, Emotion.RELAXED]
+
+        return [Emotion.UNKNOWN, Emotion.UNKNOWN, Emotion.UNKNOWN]

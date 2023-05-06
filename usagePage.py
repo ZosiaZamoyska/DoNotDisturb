@@ -15,7 +15,6 @@ USAGE_PAGE_VIEW.set_model(USAGE_PAGE_MODEL)
 
 app.layout = html.Div(
     children=[
-        html.H1(children="Hello Dash"),
         USAGE_PAGE_VIEW.get_html_component(),
     ]
 )
