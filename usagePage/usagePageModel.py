@@ -4,7 +4,7 @@ from usagePage.enum import UsageTimeGranularity
 
 class UsagePageModel:
     def __init__(self):
-        self._current_app_name = "Instagram"
+        self._current_app_name = UsageData.get_all_app_names()[0]
         self._time_granularity = UsageTimeGranularity.WEEK
         self._view = None
 

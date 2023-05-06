@@ -42,7 +42,7 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "notification-widget",
-                f"{capitalize(self.get_time_granularity())}, {self.get_current_app_name()} has notified you",
+                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has notified you",
                 self.get_model().get_notification_count(),
                 f"That is {notification_percent}% of all notifications.",
             )
@@ -61,7 +61,7 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "pickup-widget",
-                f"{capitalize(self.get_time_granularity())}, {self.get_current_app_name()} has made you pick up the phone",
+                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has made you pick up the phone",
                 self.get_model().get_pickup_count(),
                 f"That is {pickup_percent}% of the time it has notified you.",
             )
@@ -80,7 +80,7 @@ class UsagePageView:
 
             widget = self._build_usage_widget(
                 "unlock-widget",
-                f"{capitalize(self.get_time_granularity())}, {self.get_current_app_name()} has made you unlock the phone",
+                f"{capitalize(self.get_model().get_time_granularity().value)}, {self.get_model().get_current_app_name()} has made you unlock the phone",
                 self.get_model().get_unlock_count(),
                 f"That is {unlock_percent}% of the time it has made you pick up the phone.",
             )
@@ -90,7 +90,7 @@ class UsagePageView:
             return self._build_no_data_usage_widget()
 
     def _build_usage_widget(
-        id: str, title: str, number_times_occured: int, description: str
+        self, id: str, title: str, number_times_occured: int, description: str
     ) -> html.Div:
         div = html.Div(
             id=id,

@@ -5,6 +5,10 @@ from usagePage.enum import UsageTimeGranularity
 # TODO: replace with real data processing
 class UsageData:
     @staticmethod
+    def get_all_app_names() -> list[str]:
+        return ["Instagram", "GMail"]
+
+    @staticmethod
     def get_all_notification_count(time_granularity: UsageTimeGranularity) -> int:
         match time_granularity:
             case UsageTimeGranularity.WEEK:
