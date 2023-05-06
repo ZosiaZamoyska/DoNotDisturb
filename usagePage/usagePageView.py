@@ -1,7 +1,6 @@
 from dash import html, dcc
 from usagePage.data import UsageData
-from usagePage.emotionWidget.emotion import Emotion, to_emoji
-from usagePage.util import capitalize
+from usagePage.emotion import to_emoji
 
 
 class UsagePageView:

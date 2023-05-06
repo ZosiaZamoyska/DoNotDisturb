@@ -1,4 +1,4 @@
-from usagePage.emotionWidget.emotion import Emotion, to_emoji
+from usagePage.emotion import Emotion
 from usagePage.enum import UsageTimeGranularity
 
 
