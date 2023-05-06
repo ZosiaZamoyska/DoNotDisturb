@@ -1,4 +1,5 @@
-from dash import html
+from dash import html, dcc
+from usagePage.data import UsageData
 from usagePage.util import capitalize
 
 
@@ -14,6 +15,8 @@ class UsagePageView:
         return self._html_component
 
     def _build_html_component(self) -> html.Div:
+        controller_widget = self._build_controller()
+
         notification_widget = self._build_notification_widget()
         pickup_widget = self._build_pickup_widget()
         unlock_widget = self._build_unlock_widget()
@@ -27,10 +30,29 @@ class UsagePageView:
 
         page = html.Div(
             id="stat-page-container",
-            children=[usage_stat_container, emotion_emojis_widget],
+            children=[controller_widget, usage_stat_container, emotion_emojis_widget],
         )
 
         return page
+
+    def _build_controller(self):
+        div = html.Div(
+            id="controller-container",
+            children=[
+                dcc.Dropdown(
+                    id="app-dropdown",
+                    options=UsageData.get_all_app_names(),
+                    value=self.get_model().get_current_app_name(),
+                ),
+                dcc.Dropdown(
+                    id="time-granularity-dropdown",
+                    options=["week", "month"],
+                    value=self.get_model().get_time_granularity().value,
+                ),
+            ],
+        )
+
+        return div
 
     def _build_notification_widget(self):
         try:
