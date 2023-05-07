@@ -53,7 +53,8 @@ body {
     gap: 2rem;
 }
 
-.usage-widget {
+.usage-widget,
+.no-data-usage-widget {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
