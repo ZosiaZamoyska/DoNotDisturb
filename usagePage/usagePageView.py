@@ -55,7 +55,7 @@ class UsagePageView:
                 ),
                 dcc.Dropdown(
                     id="time-granularity-dropdown",
-                    options=["week", "month"],
+                    options=["day", "week", "month"],
                     value=self.get_model().get_time_granularity().value,
                 ),
             ],
@@ -76,7 +76,7 @@ class UsagePageView:
             for i in range(len(colors[days])):
                 for j in range(time[days][i]):
                     z[days].append(colors[days][i])
-        print(z)
+        #print(z)
         fig = px.imshow(z, text_auto=False)
         #fig.update_layout(xaxis_range=[0,24])
         return dcc.Graph(id='graph', figure=fig)

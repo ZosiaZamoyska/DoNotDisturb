@@ -29,17 +29,26 @@ def update_app(value):
     USAGE_PAGE_MODEL.set_current_app_name(value)
     return USAGE_PAGE_VIEW.get_html_component().children
 
+#@app.callback(
+#    Output('graph', 'figure'),
+#    Input('Granularity', 'value'))
 
 @app.callback(
     Output("stat-page-container", "children", allow_duplicate=True),
     Input("time-granularity-dropdown", "value"),
     prevent_initial_call="initial_duplicate",
 )
+
+##def update_graph(Granularity):
+ #   if ()
+
 def update_time_granularity(value):
     if value == "week":
         USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.WEEK)
-    else:
+    elif value == "month":
         USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.MONTH)
+    else:
+        USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.DAY)
     return USAGE_PAGE_VIEW.get_html_component().children
 
 
