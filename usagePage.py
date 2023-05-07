@@ -36,11 +36,10 @@ def update_app(value):
     prevent_initial_call="initial_duplicate",
 )
 def update_time_granularity(value):
-    match value:
-        case "week":
-            USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.WEEK)
-        case "month":
-            USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.MONTH)
+    if value == "week":
+        USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.WEEK)
+    else:
+        USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.MONTH)
     return USAGE_PAGE_VIEW.get_html_component().children
 
 
