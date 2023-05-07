@@ -83,13 +83,12 @@ app.layout = html.Div([
                            }
                       )
                 ]),
-    html.Div(className="graphDiv", children=[
-        dcc.Graph(id='graph')
+    html.Div(id="graphDiv", children=[
     ])
 ])
 
 @app.callback(
-    Output('graph', 'figure'),
+    Output('graphDiv', 'children'),
     Output('granularityText', 'children'),
     Input('timeInput', 'value'),
     Input('time', 'value'),
@@ -103,14 +102,14 @@ def update(timeInput, time, granularity, app):
         granularity_Text = "every week"
 
     if timeInput is None:
-        return {}, granularity_Text
+        return  html.Div(), granularity_Text
     elif isinstance(timeInput, int) or timeInput.isnumeric():
         timeInput = float(timeInput)
     else:
-        return {}, granularity_Text
+        return  html.H1("Time is not appropriate!", style={'text-align': 'center'}), granularity_Text
     
     if timeInput == 0:
-        return {}, granularity_Text
+        return  html.H1("Time input can't be zero", style={'text-align': 'center'}), granularity_Text
 
     if time == "hr(s)":
         timeInput = timeInput * 60
@@ -128,7 +127,7 @@ def update(timeInput, time, granularity, app):
                                           df.loc[df['Index'] == "Day1", app].values[0] - 6*timeInput]})],
                      ignore_index=True)
         if (df_graph[app] < 0).any().any():
-             return {},granularity_Text
+             return html.H1("Goal set is too large"),granularity_Text
         df_days = df_graph.loc[(df_graph['Index'] >= 'Day1') & (df_graph['Index'] <= 'Day7')]
         df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal7')].reset_index(drop=True)
         df_days.loc[:, "Goal"] = df_goals[app]
@@ -148,6 +147,7 @@ def update(timeInput, time, granularity, app):
         fig.update_layout(yaxis_title='Usage', xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
         fig.update_layout(legend=dict(title=''))
+        graph = dcc.Graph(id='graph', figure=fig)
     elif granularity == 'Month':
          df_graph = df[["Index", app]]
          df_graph[app] = df_graph[app].fillna(0)
@@ -159,7 +159,7 @@ def update(timeInput, time, granularity, app):
                                           df.loc[df['Index'] == "Week1", app].values[0] - 3*timeInput]})],
                      ignore_index=True)
          if (df_graph[app] < 0).any().any():
-            return {},granularity_Text
+            return  html.H1("Goal set is too large"),granularity_Text
          df_weeks = df_graph.loc[(df_graph['Index'] >= 'Week1') & (df_graph['Index'] <= 'Week4')].reset_index(drop=True)
          df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal4')].reset_index(drop=True)
          df_weeks.loc[:, "Goal"] = df_goals[app]
@@ -179,7 +179,8 @@ def update(timeInput, time, granularity, app):
          fig.update_layout(yaxis_title='Usage', xaxis_title=None)
          fig.update_layout(xaxis_tickangle=-45)
          fig.update_layout(legend=dict(title=''))
-    return fig,granularity_Text
+         graph = dcc.Graph(id='graph', figure=fig)
+    return graph,granularity_Text
 
 if __name__ == '__main__':
     app.run_server(debug=True)
