@@ -1,61 +1,61 @@
 .goalInput {
-   text-align: center;
-}
-
-.chooseApp {
     text-align: center;
-    margin-top: 10px;
  }
  
- .graphDiv {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+ .chooseApp {
+     text-align: center;
+     margin-top: 10px;
+  }
+  
+  .graphDiv {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+  }
+ 
+ #granularityText {
+     display: inline-block;
+     margin-left: 10px;
+     margin-right: 0px;
+     vertical-align: middle;
+     font-size: 10px;
+     font-weight: 600;
+     font-family: Helvetica;
  }
-
-#granularityText {
-    display: inline-block;
-    margin-left: 10px;
-    margin-right: 0px;
-    vertical-align: middle;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: Helvetica;
-}
-
-#text1 {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: Helvetica;
-}
-
-#text2 {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: Helvetica;
-}
-
-#App {
-    display: inline-block;
-    text-align: left;
-}
-
-#granularity {
-    display: inline-block;
-    text-align: left;
-    margin-left: 10px;
-    vertical-align: middle;
-}
-
-#time {
-    display: inline-block;
-    text-align: left;
-    margin-left: 10px;
-    vertical-align: middle;
-}
+ 
+ #text1 {
+     display: inline-block;
+     vertical-align: middle;
+     margin-right: 5px;
+     font-size: 10px;
+     font-weight: 600;
+     font-family: Helvetica;
+ }
+ 
+ #text2 {
+     display: inline-block;
+     vertical-align: middle;
+     margin-left: 5px;
+     font-size: 10px;
+     font-weight: 600;
+     font-family: Helvetica;
+ }
+ 
+ #App {
+     display: inline-block;
+     text-align: left;
+ }
+ 
+ #granularity {
+     display: inline-block;
+     text-align: left;
+     margin-left: 10px;
+     vertical-align: middle;
+ }
+ 
+ #time {
+     display: inline-block;
+     text-align: left;
+     margin-left: 10px;
+     vertical-align: middle;
+ }

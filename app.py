@@ -34,7 +34,7 @@ app.layout = html.Div([
                                'width': '70px',
                                 'border-radius': '15px', 
                                 'background': 'linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)',
-                                'font-size': '12px',
+                                'font-size': '10px',
                                 'font-weight': '600',
                                 'font-family': 'Helvetica'
                            }
@@ -54,7 +54,7 @@ app.layout = html.Div([
                                'width': '70px',
                                'border-radius': '15px', 
                                'background': 'linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)',
-                               'font-size': '12px',
+                               'font-size': '10px',
                                'font-weight': '600',
                                'font-family': 'Helvetica'
                            }
@@ -77,7 +77,7 @@ app.layout = html.Div([
                                'width': '200px',
                                'border-radius': '15px', 
                                'background': 'linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)',
-                               'font-size': '12px',
+                               'font-size': '10px',
                                'font-weight': '600',
                                'font-family': 'Helvetica',
                            }
