@@ -84,6 +84,10 @@ app.layout = html.Div([
                       )
                 ]),
     html.Div(id="graphDiv", children=[
+    ]),
+    html.Div(id="screenTimeMonitoring", children = [  
+        html.H2(id = 'stm_text1',children=["Not sure how much", html.Br(), "time limit to set?"]),
+        html.H3(id = 'stm_text2',children=["Try screen time monitoring", ])
     ])
 ])
 

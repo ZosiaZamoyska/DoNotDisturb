@@ -85,3 +85,21 @@
     font-size: 18px;
     color:darkgray;
  }
+
+ #screenTimeMonitoring{
+    border-radius: 20px;
+    padding: 10px;
+    background: linear-gradient(to right, #725CFF 0%, #8AFFFF 100%);
+ }
+
+ #stm_text1 {
+    color: white;
+    font-family: Helvetica;
+    margin-bottom: -20px;
+ }
+
+ #stm_text2 {
+    font-weight: 100;
+    font-family: Helvetica;
+    color: #363F45; 
+ }
