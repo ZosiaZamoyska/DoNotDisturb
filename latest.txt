@@ -17,7 +17,7 @@ stm = html.Div(id='stm', children = [
         html.H3(id='stm_text2',children=["Try screen time monitoring",
                                          html.Button(id='infoButton')]),
         html.Div(id='buttonDiv',children=[html.Button(id='do_stm_button', children=['START'])]),
-        html.Div(id='goBackDiv', style={'display': 'none'}, children=[html.Button(id='goBackButton')])
+        # html.Div(id='goBackDiv', style={'display': 'none'}, children=[html.Button(id='goBackButton')])
     ])
 
 stm_exp =  html.Div(id='stm_exp', children=[  
@@ -30,7 +30,7 @@ is the duration the users are mostly likely to adhere to. """),
        html.Div(id='goBackDiv', style={'display': 'none'}, children=[html.Button(id='infoButton')])
     ])
 
-app.layout = html.Div([
+app.layout = html.Div(className='goalTrackingPage', children=[
     html.Div(className='goalInput', 
             children=[html.P(id='text1', children=["I want to reduce usage by "]),
                       dcc.Input(id='timeInput', value=5, type='number', style={
@@ -104,8 +104,10 @@ app.layout = html.Div([
                 ]),
     html.Div(id="graphDiv", children=[
     ]),
-    html.Div(id="screenTimeMonitoring", children = stm)
+    html.Div(id="screenTimeMonitoring", children=[stm])
 ])
+
+
 
 @app.callback(
     Output('graphDiv', 'children'),
@@ -213,22 +215,22 @@ def update(timeInput, time, granularity, app):
          graph = dcc.Graph(id='graph', figure=fig)
     return graph,granularity_Text
 
-@app.callback(
-    Output('screenTimeMonitoring', 'children'),
-    Input('infoButton', 'n_clicks'),
-    Input('goBackButton', 'n_clicks')
-)
+# @app.callback(
+#     Output('screenTimeMonitoring', 'children'),
+#     Input('infoButton', 'n_clicks'),
+#     Input('goBackButton', 'n_clicks')
+# )
 
-def display_page(info_clicks, back_clicks):
-    ctx = dash.callback_context
-    if not ctx.triggered:
-        return stm
-    else: 
-        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        if button_id == 'infoButton':
-            return stm_exp
-        elif button_id == 'goBackButton':
-            return stm
+# def display_page(info_clicks, back_clicks):
+#     ctx = dash.callback_context
+#     if not ctx.triggered:
+#         return stm
+#     else: 
+#         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+#         if button_id == 'infoButton':
+#             return stm_exp
+#         elif button_id == 'goBackButton':
+#             return stm
 
 if __name__ == '__main__':
     app.run_server(debug=True)

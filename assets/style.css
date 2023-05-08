@@ -95,11 +95,56 @@
  #stm_text1 {
     color: white;
     font-family: Helvetica;
-    margin-bottom: -20px;
+    margin-bottom: -15px;
+
  }
 
  #stm_text2 {
     font-weight: 100;
     font-family: Helvetica;
     color: #363F45; 
+    display: flex;
+    align-items: center;
  }
+
+#infoButton{
+   border-radius: 50%;
+   width: 20px;
+   height: 20px;
+   border: none;
+   background-image: url('https://cdn-icons-png.flaticon.com/512/32/32175.png');
+   background-size: cover;
+   margin-left: 5px;
+}
+
+#do_stm_button{
+   border-radius: 15px;
+   padding: 10px 80px;
+   font-size: 15px;
+   font-weight: 200;
+   font-family: Helvetica;
+   background-color: white;
+   border:none;
+   box-shadow: none;
+}
+
+#buttonDiv {
+   text-align: center
+}
+
+#goBackButton {
+   border-radius: 50%;
+   width: 30px;
+   height: 30px;
+   border: none;
+   background-image: url('https://cdn.iconscout.com/icon/free/png-256/free-back-arrow-1767523-1502427.png');
+   background-size: cover;
+}
+
+#stm {
+
+}
+
+#stm_exp {
+   
+}
