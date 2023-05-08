@@ -294,6 +294,7 @@ def display_page(info_clicks, back_clicks):
     [State("input_stm", "value")]
 )
 def add_value_to_dataframe(n_clicks, time_stm, app, value):
+    prev_clicks = add_value_to_dataframe.prev_clicks if hasattr(add_value_to_dataframe, 'prev_clicks') else 0
     df_timeLimit_ori = pd.read_csv("stm_data.csv")
     df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
     if value is None:
@@ -310,22 +311,22 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         return dcc.Graph(id='graph_stm', figure=fig)
     elif isinstance(value, int) or value.isnumeric():
         value = float(value)
-    else:
-        return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
-                                                  html.H1(id='errorText', children=["TIME IS NOT APPROPRIATE!"])])
-    
     if value == 0:
         return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
                                                   html.H1(id='errorText', children=["TIME SHOULD NOT BE 0!"])])
-
-    if time_stm == 'hr(s)':
-        value *= 60
     
-    if n_clicks is not None and value is not None:
-        df_timeLimit.loc[len(df_timeLimit), ["App", "TimeLimit(mins)"]] = [app, value]
+    if n_clicks != prev_clicks and value is not None:
+        if time_stm == 'hr(s)':
+            value *= 60
+        add_value_to_dataframe.prev_clicks = n_clicks
+        df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        new_row = pd.DataFrame({"App": [app], "TimeLimit(mins)": [value]})
+        df_timeLimit = pd.concat([df_timeLimit, new_row], ignore_index=True)
         df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)"]] = [app, value]
         df_timeLimit_ori.to_csv("stm_data.csv", index=False)
         df_timeLimit = df_timeLimit.fillna(0)
+        df_timeLimit_ori = df_timeLimit_ori.fillna(0)
         fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
         fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
@@ -333,6 +334,19 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         graph = dcc.Graph(id='graph_stm', figure=fig)
         return graph
+    elif n_clicks == prev_clicks:
+        df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        if df_timeLimit.empty: 
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["NOTHING YET"])])
+        fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        fig.update_layout(width=372, height=403)
+        fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
+        fig.update_layout(legend=dict(title=None,))
+        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
+        return dcc.Graph(id='graph_stm', figure=fig)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

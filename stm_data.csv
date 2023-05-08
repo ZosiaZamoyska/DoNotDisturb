@@ -2,7 +2,5 @@ App,TimeLimit(mins),RealUsage
 Instagram,25.0,23.0
 YouTube,20.0,50.0
 Instagram,50.0,30.0
-Total Usage,45.0,
-Instagram,30.0,
-Facebook,30.0,
-YouTube,30.0,
+Total Usage,50.0,
+YouTube,50.0,

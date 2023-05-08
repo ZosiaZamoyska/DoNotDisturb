@@ -102,10 +102,14 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         value *= 60
     
     if n_clicks is not None and value is not None:
-        df_timeLimit.loc[len(df_timeLimit), ["App", "TimeLimit(mins)"]] = [app, value]
+        df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        new_row = pd.DataFrame({"App": [app], "TimeLimit(mins)": [value]})
+        df_timeLimit = pd.concat([df_timeLimit, new_row], ignore_index=True)
         df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)"]] = [app, value]
         df_timeLimit_ori.to_csv("stm_data.csv", index=False)
         df_timeLimit = df_timeLimit.fillna(0)
+        df_timeLimit_ori = df_timeLimit_ori.fillna(0)
         fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
         fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
@@ -113,7 +117,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         graph = dcc.Graph(id='graph_stm', figure=fig)
         return graph
-
+``
 
 if __name__ == '__main__':
     app.run_server(debug=True)
