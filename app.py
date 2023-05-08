@@ -142,7 +142,10 @@ def update(timeInput, time, granularity, app):
         fig.add_scatter(x=df_days['Index'], y=df_days['Goal'], mode='markers',  marker=dict(color='black', size=15, symbol='line-ew-open'), name='Goal')
         fig.add_annotation(x="Day1", y=df_days.loc[df_days["Index"] == "Day1", app].iloc[0], text="You start here", showarrow=True, font=dict(size=8, color='black'))
         min_val = df_days.loc[df_days[app] > 0, app].min()
-        fig.update_yaxes(range=[min(min_val, df_days['Goal'].min())-timeInput, max(df_days[app].max(), df_days['Goal'].max())+timeInput])
+        min_y_axis = min(min_val, df_days['Goal'].min()) - timeInput
+        if min_y_axis < 0:
+            min_y_axis = 0
+        fig.update_yaxes(range=[min_y_axis, max(df_days[app].max(), df_days['Goal'].max())+timeInput])
         fig.update_layout(width=372, height=403)
         fig.update_layout(yaxis_title='Usage', xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
@@ -174,7 +177,10 @@ def update(timeInput, time, granularity, app):
          fig.add_scatter(x=df_weeks['Index'], y=df_weeks['Goal'], mode='markers',  marker=dict(color='black', size=30, symbol='line-ew-open'), name='Goal')
          fig.add_annotation(x="Week1", y=df_weeks.loc[df_weeks["Index"] == "Week1", app].iloc[0], text="You start here", showarrow=True, font=dict(size=8, color='black'))
          min_val = df_weeks.loc[df_weeks[app] > 0, app].min()
-         fig.update_yaxes(range=[min(min_val, df_weeks['Goal'].min())-timeInput, max(df_weeks[app].max(), df_weeks['Goal'].max())+timeInput])
+         min_y_axis = min(min_val, df_weeks['Goal'].min()) - timeInput
+         if min_y_axis < 0:
+            min_y_axis = 0
+         fig.update_yaxes(range=[min_y_axis, max(df_weeks[app].max(), df_weeks['Goal'].max())+timeInput])
          fig.update_layout(width=372, height=403)
          fig.update_layout(yaxis_title='Usage', xaxis_title=None)
          fig.update_layout(xaxis_tickangle=-45)

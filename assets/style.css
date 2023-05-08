@@ -59,3 +59,8 @@
      margin-left: 10px;
      vertical-align: middle;
  }
+
+ #graph {
+    display: inline-block;
+    vertical-align: middle;
+ }
