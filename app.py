@@ -102,14 +102,17 @@ def update(timeInput, time, granularity, app):
         granularity_Text = "every week"
 
     if timeInput is None:
-        return  html.Div(), granularity_Text
+        return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/premium-vector/hourglass-icon-comic-style-sandglass-cartoon-vector-illustration-white-isolated-background-clock-splash-effect-business-concept_157943-6412.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["WAITING..."])]), granularity_Text
     elif isinstance(timeInput, int) or timeInput.isnumeric():
         timeInput = float(timeInput)
     else:
-        return  html.H1("Time is not appropriate!", style={'text-align': 'center'}), granularity_Text
+        return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["TIME IS NOT APPROPRIATE!"])]), granularity_Text
     
     if timeInput == 0:
-        return  html.H1("Time input can't be zero", style={'text-align': 'center'}), granularity_Text
+        return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["TIME SHOULD NOT BE 0!"])]), granularity_Text
 
     if time == "hr(s)":
         timeInput = timeInput * 60
@@ -127,7 +130,8 @@ def update(timeInput, time, granularity, app):
                                           df.loc[df['Index'] == "Day1", app].values[0] - 6*timeInput]})],
                      ignore_index=True)
         if (df_graph[app] < 0).any().any():
-             return html.H1("Goal set is too large"),granularity_Text
+            return html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["GOAL SET TOO LARGE"])]), granularity_Text
         df_days = df_graph.loc[(df_graph['Index'] >= 'Day1') & (df_graph['Index'] <= 'Day7')]
         df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal7')].reset_index(drop=True)
         df_days.loc[:, "Goal"] = df_goals[app]
@@ -162,7 +166,8 @@ def update(timeInput, time, granularity, app):
                                           df.loc[df['Index'] == "Week1", app].values[0] - 3*timeInput]})],
                      ignore_index=True)
          if (df_graph[app] < 0).any().any():
-            return  html.H1("Goal set is too large"),granularity_Text
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["GOAL SET TOO LARGE"])]), granularity_Text
          df_weeks = df_graph.loc[(df_graph['Index'] >= 'Week1') & (df_graph['Index'] <= 'Week4')].reset_index(drop=True)
          df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal4')].reset_index(drop=True)
          df_weeks.loc[:, "Goal"] = df_goals[app]

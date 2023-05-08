@@ -64,3 +64,24 @@
     display: inline-block;
     vertical-align: middle;
  }
+
+
+ #errorDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+
+ #errorImg {
+    display: inline-block;
+    vertical-align: middle;
+    height: 300px;
+    width: 300px;
+ }
+
+ #errorText{
+    text-align: center;
+    font-size: 18px;
+    color:darkgray;
+ }
