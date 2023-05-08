@@ -38,6 +38,29 @@ app.layout = html.Div(className='stm', children= [html.Div(id='goBackDiv_stm', c
                            }
                       ),
     html.Button( id="add-value-button"),]),
+    html.Div(id='chooseApp_stm', children=[
+                    dcc.Dropdown(
+                        id = 'App_stm',
+                        options = [
+                            {'label': 'Total Usage', 'value': 'Total Usage'},
+                            {'label': 'Instagram', 'value': 'Instagram'},
+                            {'label': 'Facebook', 'value': 'Facebook'},
+                            {'label': 'YouTube', 'value': 'YouTube'}
+                        ],
+                        multi = False,
+                        value = 'Total Usage',
+                        clearable = False,
+                        searchable = False,
+                        style={
+                               'width': '200px',
+                               'border-radius': '15px', 
+                               'background': 'linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)',
+                               'font-size': '10px',
+                               'font-weight': '600',
+                               'font-family': 'Helvetica',
+                           }
+                      )
+                ]),
     html.Div(id='output-container', children=[]),
    ])
 
@@ -46,13 +69,19 @@ app.layout = html.Div(className='stm', children= [html.Div(id='goBackDiv_stm', c
 @app.callback(
     Output("output-container", "children"),
     [Input("add-value-button", "n_clicks"),
-     Input("time_stm", "value")],
+     Input("time_stm", "value"),
+     Input("App_stm", "value")],
     [State("input_stm", "value")]
 )
-def add_value_to_dataframe(n_clicks, time_stm, value):
-    df_timeLimit = pd.read_csv("stm_data.csv")
+def add_value_to_dataframe(n_clicks, time_stm, app, value):
+    df_timeLimit_ori = pd.read_csv("stm_data.csv")
+    df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
     if value is None:
-        df_timeLimit = pd.read_csv("stm_data.csv")
+        df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        if df_timeLimit.empty: 
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["NOTHING YET"])])
         fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
         fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
@@ -73,8 +102,9 @@ def add_value_to_dataframe(n_clicks, time_stm, value):
         value *= 60
     
     if n_clicks is not None and value is not None:
-        df_timeLimit.loc[len(df_timeLimit), "TimeLimit(mins)"] = value
-        df_timeLimit.to_csv("stm_data.csv", index=False)
+        df_timeLimit.loc[len(df_timeLimit), ["App", "TimeLimit(mins)"]] = [app, value]
+        df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)"]] = [app, value]
+        df_timeLimit_ori.to_csv("stm_data.csv", index=False)
         df_timeLimit = df_timeLimit.fillna(0)
         fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
@@ -82,7 +112,6 @@ def add_value_to_dataframe(n_clicks, time_stm, value):
         fig.update_layout(legend=dict(title=None,))
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         graph = dcc.Graph(id='graph_stm', figure=fig)
-        
         return graph
 
 

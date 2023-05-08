@@ -200,3 +200,13 @@
    background: linear-gradient(to right, #725CFF 0%, #8AFFFF 100%);
    font-family: Helvetica;
 }
+
+#chooseApp_stm {
+   text-align: center;
+   margin-top: 10px;
+}
+
+#App_stm {
+   display: inline-block;
+   text-align: left;
+}
