@@ -1,4 +1,10 @@
 import dash
+from dash import html, Input, Output, dcc
+import pandas as pd
+from header import Header, Page
+import plotly.express as px
+from usagePage.enum import UsageTimeGranularity
+import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
@@ -6,12 +12,27 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-
-df = pd.read_csv("data2.csv")
+from usagePage.usagePageModel import UsagePageModel
+from usagePage.usagePageView import UsagePageView
 
 app = dash.Dash(__name__)
 
-# stm stands for screen time monitoring
+HEADER = Header()
+header = HEADER.get_html_component()
+
+###
+# Usage Page
+###
+
+USAGE_PAGE_MODEL = UsagePageModel()
+USAGE_PAGE_VIEW = UsagePageView()
+
+USAGE_PAGE_MODEL.set_view(USAGE_PAGE_VIEW)
+USAGE_PAGE_VIEW.set_model(USAGE_PAGE_MODEL)
+
+###
+# Screen Time Monitoring Page
+###
 stm = html.Div(
     id="stm",
     children=[
@@ -54,10 +75,7 @@ is the duration the users are mostly likely to adhere to. """,
 
 df_timeLimit = pd.DataFrame(columns=["TimeLimit"])
 
-stm_page = html.Div()
-
-
-app.layout = html.Div(
+stm_page = html.Div(
     [
         html.Div(
             className="goalInput",
@@ -215,6 +233,51 @@ app.layout = html.Div(
         ),
     ]
 )
+
+### Code begin
+
+current_page = stm_page
+
+app.layout = html.Div(
+    children=[header, html.Div(id="page-container", children=[current_page])]
+)
+
+
+@app.callback(
+    Output("stat-page-container", "children", allow_duplicate=True),
+    Input("app-dropdown", "value"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_app(value):
+    USAGE_PAGE_MODEL.set_current_app_name(value)
+    return USAGE_PAGE_VIEW.get_html_component().children
+
+
+@app.callback(
+    Output("stat-page-container", "children", allow_duplicate=True),
+    Input("time-granularity-dropdown", "value"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_time_granularity(value):
+    if value == "week":
+        USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.WEEK)
+    else:
+        USAGE_PAGE_MODEL.set_time_granularity(UsageTimeGranularity.MONTH)
+    return USAGE_PAGE_VIEW.get_html_component().children
+
+
+@app.callback(
+    Output("page-container", "children", allow_duplicate=True),
+    Input("page-dropdown", "value"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_page(value):
+    if value == "Goal tracking":
+        HEADER.set_current_page(Page.GOAL_TRACKING)
+        return stm_page
+    else:
+        HEADER.set_current_page(Page.USAGE_STAT)
+        return USAGE_PAGE_VIEW.get_html_component()
 
 
 @app.callback(
