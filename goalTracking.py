@@ -33,6 +33,8 @@ USAGE_PAGE_VIEW.set_model(USAGE_PAGE_MODEL)
 ###
 # Screen Time Monitoring Page
 ###
+df = pd.read_csv('data2.csv')
+
 stm = html.Div(
     id="stm",
     children=[
