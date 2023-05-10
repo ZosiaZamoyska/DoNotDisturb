@@ -64,23 +64,22 @@ class UsagePageView:
         return div
 
     def _build_review_widget(self):
-        day = (
-            ["monday"] * 7
-            + ["tuesday"] * 7
-            + ["wednesday"] * 7
-            + ["thursday"] * 7
-            + ["friday"] * 7
-            + ["saturday"] * 7
-            + ["sunday"] * 7
-        )
-        time = [6, 2, 2, 3, 4, 3, 4] * 7
-        colors = ["r", "g", "b", "g", "b", "g", "r"] * 7
-        df = pd.DataFrame(
-            list(zip(day, time, colors)), columns=["day", "time", "colors"]
-        )
-        fig = px.bar(df, x=time, y=day, color=colors, width=1000, height=300)
-        fig.update_layout(xaxis_range=[0, 24])
-        return dcc.Graph(id="graph", figure=fig)
+        day = ["monday"]*7 + ["tuesday"]*7 + ["wednesday"]*7 + ["thursday"]*7 + ["friday"] *7 + ["saturday"]*7 + ["sunday"]*7
+        time = [[6, 2, 2, 3, 4, 3, 4], [2, 6, 2, 3, 4, 5, 2], [6, 1, 2, 4, 4, 2, 5], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4]]
+        #colors = ['r', 'g', 'b', 'g', 'b', 'g', 'r']
+        colors = [[1, 2, 3, 2, 3, 2, 1], [2, 1, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1]]
+        df = pd.DataFrame(list(zip(day, time, colors)), columns =['day', 'time', 'colors'])
+        #fig = px.bar(df, x=time, y=day, color=colors, width=1000, height=300)
+        z = [[], [], [], [], [], [], []]
+        #print(z)
+        for days in range(7):
+            for i in range(len(colors[days])):
+                for j in range(time[days][i]):
+                    z[days].append(colors[days][i])
+        #print(z)
+        fig = px.imshow(z, text_auto=False)
+        #fig.update_layout(xaxis_range=[0,24])
+        return dcc.Graph(id='graph', figure=fig)
 
     def _build_notification_widget(self):
         try:
