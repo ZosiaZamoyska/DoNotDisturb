@@ -1,2 +1,1 @@
-web: gunicorn
-app: goalTracking
+web: gunicorn app:server
