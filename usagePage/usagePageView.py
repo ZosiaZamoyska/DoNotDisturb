@@ -80,7 +80,12 @@ class UsagePageView:
                 for j in range(time[days][i]):
                     z[days].append(colors[days][i])
         #print(z)
+
+
         fig = px.imshow(z, text_auto=False, color_continuous_scale=color_scale)
+        fig.layout.coloraxis.showscale = False
+        #fig.update_layout(width=1000, height=200)
+
         #fig.update_layout(xaxis_range=[0,24])
         return dcc.Graph(id='graph', figure=fig)
 
