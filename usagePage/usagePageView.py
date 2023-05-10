@@ -3,7 +3,8 @@ from usagePage.data import UsageData
 from usagePage.emotion import to_emoji
 import pandas as pd
 import plotly.express as px
-
+from matplotlib import pyplot as plt
+import matplotlib
 
 class UsagePageView:
     def get_model(self):
@@ -65,19 +66,21 @@ class UsagePageView:
 
     def _build_review_widget(self):
         day = ["monday"]*7 + ["tuesday"]*7 + ["wednesday"]*7 + ["thursday"]*7 + ["friday"] *7 + ["saturday"]*7 + ["sunday"]*7
-        time = [[6, 2, 2, 3, 4, 3, 4], [2, 6, 2, 3, 4, 5, 2], [6, 1, 2, 4, 4, 2, 5], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4]]
+        time = [[6, 2, 2, 3, 4, 3, 4], [2, 6, 2, 3, 4, 5, 2], [6, 1, 2, 4, 4, 2, 5], [8, 2, 3, 2, 1, 4, 4], [7, 3, 1, 2, 4, 5, 2], [9, 2, 2, 4, 3, 4], [6, 2, 2, 3, 4, 3, 4]]
         #colors = ['r', 'g', 'b', 'g', 'b', 'g', 'r']
-        colors = [[1, 2, 3, 2, 3, 2, 1], [2, 1, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1], [1, 2, 3, 2, 3, 2, 1]]
+        colors = [[0, 2, 3, 1, 3, 1, 0], [1, 0, 3, 0, 3, 2, 1], [0, 2, 3, 1, 3, 2, 1], [0, 3, 2, 1, 2, 3, 1], [0, 2, 1, 2, 3, 2, 0], [0, 2, 3, 2, 3, 1], [0, 2, 1, 2, 3, 2, 1]]
         df = pd.DataFrame(list(zip(day, time, colors)), columns =['day', 'time', 'colors'])
         #fig = px.bar(df, x=time, y=day, color=colors, width=1000, height=300)
         z = [[], [], [], [], [], [], []]
+        color_map = matplotlib.cm.get_cmap('Paired_r', 10)
+        color_scale = [[0, '#D9D9D9'], [0.33, '#E16060'], [0.66, "#FBD167"], [1, "#65C089"]]
         #print(z)
         for days in range(7):
             for i in range(len(colors[days])):
                 for j in range(time[days][i]):
                     z[days].append(colors[days][i])
         #print(z)
-        fig = px.imshow(z, text_auto=False)
+        fig = px.imshow(z, text_auto=False, color_continuous_scale=color_scale)
         #fig.update_layout(xaxis_range=[0,24])
         return dcc.Graph(id='graph', figure=fig)
 
