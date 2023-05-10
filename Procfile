@@ -1,1 +1,2 @@
-web: python goalTracking.py
+web: gunicorn
+app: goalTracking
