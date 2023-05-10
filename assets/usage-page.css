@@ -2,8 +2,27 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-#controller-container {
+#header {
     position: fixed;
+    top: 0;
+
+    width: 100%;
+}
+
+#page-dropdown {
+    width: auto;
+    margin: 0 1rem;
+}
+
+#page-container {
+    top: 5rem;
+
+    width: auto;
+}
+
+#controller-container {
+    /* position: fixed; */
+
     top: 0;
     left: 0;
 
@@ -53,7 +72,8 @@ body {
     gap: 2rem;
 }
 
-.usage-widget {
+.usage-widget,
+.no-data-usage-widget {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
