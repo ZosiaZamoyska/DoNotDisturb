@@ -15,7 +15,8 @@ body {
 }
 
 #page-container {
-    top: 5rem;
+    position: relative;
+    top: 2rem;
 
     width: auto;
 }
