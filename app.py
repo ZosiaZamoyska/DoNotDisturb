@@ -15,7 +15,7 @@ import numpy as np
 from usagePage.usagePageModel import UsagePageModel
 from usagePage.usagePageView import UsagePageView
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, suppress_callback_exceptions=True)
 
 HEADER = Header()
 header = HEADER.get_html_component()
