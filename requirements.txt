@@ -136,7 +136,6 @@ Twisted==21.7.0
 twitterscraper==1.6.1
 typing_extensions==4.0.1
 tzlocal==2.0.0
-urllib3==1.26.7
 validators==0.14.3
 w3lib==1.22.0
 watchdog==0.10.2
@@ -147,4 +146,3 @@ Werkzeug==1.0.1
 wget==3.2
 widgetsnbextension==3.5.1
 wsproto==1.0.0
-zipp==3.1.0
