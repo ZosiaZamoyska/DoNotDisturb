@@ -1,4 +1,5 @@
 pip==21.3.1
+python==3.9.10
 altair==4.1.0
 appnope==0.1.0
 asn1crypto==0.24.0
@@ -78,7 +79,6 @@ parso==0.7.0
 pathtools==0.1.2
 pexpect==4.8.0
 pickleshare==0.7.5
-python==3.9.10
 Pillow==7.0.0
 plotly==5.3.1
 pluggy==0.13.1
