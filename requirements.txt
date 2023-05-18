@@ -110,7 +110,6 @@ pytz==2020.1
 pyzmq==19.0.0
 queuelib==1.6.2
 requests==2.21.0
-ruamel_yaml==0.15.46
 s3transfer==0.3.3
 Scrapy==2.5.1
 scrapy-selenium==0.0.7
