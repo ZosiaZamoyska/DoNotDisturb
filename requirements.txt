@@ -8,3 +8,4 @@ pandas==1.2.4
 plotly==5.14.1
 matplotlib==3.7.1
 Flask==2.1.1
+urllib3==1.26.7
