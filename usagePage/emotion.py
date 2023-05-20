@@ -49,30 +49,29 @@ def calc_emotion(valence: int, arousal: int) -> Emotion:
 
 
 def to_emoji(emotion: Emotion) -> str:
-    match emotion:
-        case Emotion.UNKNOWN:
+    if emotion == Emotion.UNKNOWN:
             return "❓"
-        case Emotion.EXCITED:
+    elif emotion == Emotion.EXCITED:
             return "🤩"
-        case Emotion.DELIGHTED:
+    elif emotion == Emotion.DELIGHTED:
             return "😁"
-        case Emotion.HAPPY:
+    elif emotion == Emotion.HAPPY:
             return "😊"
-        case Emotion.PLEASED:
+    elif emotion == Emotion.PLEASED:
             return "🙂"
-        case Emotion.RELAXED:
+    elif emotion == Emotion.RELAXED:
             return "😌"
-        case Emotion.SLEEPY:
+    elif emotion == Emotion.SLEEPY:
             return "😴"
-        case Emotion.TENSE:
+    elif emotion == Emotion.TENSE:
             return "😤"
-        case Emotion.ANGRY:
+    elif emotion == Emotion.ANGRY:
             return "😡"
-        case Emotion.FRUSTRATED:
+    elif emotion == Emotion.FRUSTRATED:
             return "😫"
-        case Emotion.DEPRESSED:
+    elif emotion == Emotion.DEPRESSED:
             return "😞"
-        case Emotion.BORED:
+    elif emotion == Emotion.BORED:
             return "😒"
-        case Emotion.TIRED:
+    elif emotion == Emotion.TIRED:
             return "😪"
