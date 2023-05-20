@@ -82,7 +82,7 @@ class UsagePageView:
         #print(z)
 
 
-        fig = px.imshow(z, text_auto=False, color_continuous_scale=color_scale)
+        fig = px.imshow(z, color_continuous_scale=color_scale)
         fig.layout.coloraxis.showscale = False
         #fig.update_layout(width=1000, height=200)
 
