@@ -2,8 +2,9 @@ pip==21.3.1
 gunicorn==19.0.0
 dash==2.0.0
 Jinja2==2.11.2
-Werkzeug==1.0.1
+Werkzeug==2.0.3
 MarkupSafe==1.1.1
 pandas==1.2.4
 plotly==5.14.1
 matplotlib==3.7.1
+Flask==2.1.1
