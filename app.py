@@ -1,17 +1,11 @@
 import dash
-from dash import html, Input, Output, dcc
-import pandas as pd
-from header import Header, Page
-import plotly.express as px
-from usagePage.enum import UsageTimeGranularity
-import dash
-from dash import dcc
-from dash import html
+from dash import dcc, html
 from dash.dependencies import Input, Output, State
-import plotly.express as px
-import plotly.graph_objects as go
-import pandas as pd
+from goalAndScreenTime.goalAndScreenTimeView import GoalAndScreenTimeView
+from header import Header, Page
 import numpy as np
+import pandas as pd
+import plotly.express as px
 from usagePage.usagePageModel import UsagePageModel
 from usagePage.usagePageView import UsagePageView
 
@@ -30,219 +24,34 @@ USAGE_PAGE_VIEW = UsagePageView()
 USAGE_PAGE_MODEL.set_view(USAGE_PAGE_VIEW)
 USAGE_PAGE_VIEW.set_model(USAGE_PAGE_MODEL)
 
+GOAL_AND_SCREEN_TIME_VIEW = GoalAndScreenTimeView()
+
 ###
 # Screen Time Monitoring Page
 ###
-df = pd.read_csv('data2.csv')
-
-stm = html.Div(
-    id="stm",
-    children=[
-        html.H2(
-            id="stm_text1",
-            children=["Not sure how much", html.Br(), "time limit to set?"],
-        ),
-        html.H3(
-            id="stm_text2",
-            children=["Try screen time monitoring", html.Button(id="infoButton")],
-        ),
-        # html.Div(id='buttonDiv',children=[html.Button(id='do_stm_button', children=['GO'])]),
-        html.Div(
-            id="goBackDiv",
-            style={"display": "none"},
-            children=[html.Button(id="goBackButton")],
-        ),
-    ],
-)
-
-stm_exp = html.Div(
-    id="stm_exp",
-    children=[
-        html.Button(id="goBackButton"),
-        html.P(
-            id="explanation",
-            children="""The data visualisation represents the maximum time limit a user
-has set for their app usage and the actual duration of app usage
-after the time limit has been set. The purpose of this visualisation
-is to determine the optimal duration for app usage limits, which
-is the duration the users are mostly likely to adhere to. """,
-        ),
-        html.Div(
-            id="goBackDiv",
-            style={"display": "none"},
-            children=[html.Button(id="infoButton")],
-        ),
-    ],
-)
-
-df_timeLimit = pd.DataFrame(columns=["TimeLimit"])
-
-stm_page = html.Div(
-    [
-        html.Div(
-            className="goalInput",
-            children=[
-                html.P(id="text1", children=["I want to reduce usage by "]),
-                dcc.Input(
-                    id="timeInput",
-                    value=5,
-                    type="number",
-                    style={
-                        "display": "inline-block",
-                        "verticalAlign": "middle",
-                        "width": "30px",
-                        "margin-left": "5px",
-                    },
-                ),
-                dcc.Dropdown(
-                    id="time",
-                    options=[
-                        {"label": "min(s)", "value": "min(s)"},
-                        {"label": "hr(s)", "value": "hr(s)"},
-                    ],
-                    multi=False,
-                    value="min(s)",
-                    clearable=False,
-                    searchable=False,
-                    style={
-                        "width": "70px",
-                        "border-radius": "15px",
-                        "background": "linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)",
-                        "font-size": "10px",
-                        "font-weight": "600",
-                        "font-family": "Helvetica",
-                    },
-                ),
-                html.P(id="granularityText", children=["every day"]),
-                html.P(id="text2", children=["in a"]),
-                dcc.Dropdown(
-                    id="granularity",
-                    options=[
-                        {"label": "Week", "value": "Week"},
-                        {"label": "Month", "value": "Month"},
-                    ],
-                    multi=False,
-                    value="Week",
-                    clearable=False,
-                    searchable=False,
-                    style={
-                        "width": "70px",
-                        "border-radius": "15px",
-                        "background": "linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)",
-                        "font-size": "10px",
-                        "font-weight": "600",
-                        "font-family": "Helvetica",
-                    },
-                ),
-            ],
-        ),
-        html.Div(
-            className="chooseApp",
-            children=[
-                dcc.Dropdown(
-                    id="App",
-                    options=[
-                        {"label": "Total Usage", "value": "Total Usage"},
-                        {"label": "Instagram", "value": "Instagram"},
-                        {"label": "Facebook", "value": "Facebook"},
-                        {"label": "YouTube", "value": "YouTube"},
-                    ],
-                    multi=False,
-                    value="Total Usage",
-                    clearable=False,
-                    searchable=False,
-                    style={
-                        "width": "200px",
-                        "border-radius": "15px",
-                        "background": "linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)",
-                        "font-size": "10px",
-                        "font-weight": "600",
-                        "font-family": "Helvetica",
-                    },
-                )
-            ],
-        ),
-        html.Div(id="graphDiv", children=[]),
-        html.Div(id="screenTimeMonitoring", children=stm),
-        # Screen time monitoring page starts here
-        html.Div(
-            className="stm",
-            children=[
-                html.Div(
-                    children=[
-                        html.H4(
-                            id="stm_timeLimit",
-                            children=[
-                                "Time Limit:",
-                                dcc.Input(
-                                    id="input_stm", type="number", placeholder=""
-                                ),
-                                dcc.Dropdown(
-                                    id="time_stm",
-                                    options=[
-                                        {"label": "min(s)", "value": "min(s)"},
-                                        {"label": "hr(s)", "value": "hr(s)"},
-                                    ],
-                                    multi=False,
-                                    value="min(s)",
-                                    clearable=False,
-                                    searchable=False,
-                                    style={
-                                        "width": "70px",
-                                        "border-radius": "15px",
-                                        "background": "linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)",
-                                        "font-size": "10px",
-                                        "font-weight": "600",
-                                        "font-family": "Helvetica",
-                                    },
-                                ),
-                                html.Button(id="add-value-button"),
-                            ],
-                        ),
-                        html.Div(
-                            id="chooseApp_stm",
-                            children=[
-                                dcc.Dropdown(
-                                    id="App_stm",
-                                    options=[
-                                        {
-                                            "label": "Total Usage",
-                                            "value": "Total Usage",
-                                        },
-                                        {"label": "Instagram", "value": "Instagram"},
-                                        {"label": "Facebook", "value": "Facebook"},
-                                        {"label": "YouTube", "value": "YouTube"},
-                                    ],
-                                    multi=False,
-                                    value="Total Usage",
-                                    clearable=False,
-                                    searchable=False,
-                                    style={
-                                        "width": "200px",
-                                        "border-radius": "15px",
-                                        "background": "linear-gradient(to bottom right, #D1D5FA 0%, #A9DFE2 100%)",
-                                        "font-size": "10px",
-                                        "font-weight": "600",
-                                        "font-family": "Helvetica",
-                                    },
-                                )
-                            ],
-                        ),
-                        html.Div(id="output-container", children=[]),
-                    ]
-                )
-            ],
-        ),
-    ]
-)
+df = pd.read_csv("data2.csv")
 
 ### Code begin
 
-current_page = stm_page
+current_page = GOAL_AND_SCREEN_TIME_VIEW.get_html_component()
 
 app.layout = html.Div(
     children=[header, html.Div(id="page-container", children=[current_page])]
 )
+
+
+@app.callback(
+    Output("page-container", "children", allow_duplicate=True),
+    Input("page-dropdown", "value"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_page(value):
+    if value == "Goal tracking":
+        HEADER.set_current_page(Page.GOAL_TRACKING)
+        return GOAL_AND_SCREEN_TIME_VIEW.get_html_component()
+    else:
+        HEADER.set_current_page(Page.USAGE_STAT)
+        return USAGE_PAGE_VIEW.get_html_component()
 
 
 @app.callback(
@@ -269,26 +78,12 @@ def update_time_granularity(value):
 
 
 @app.callback(
-    Output("page-container", "children", allow_duplicate=True),
-    Input("page-dropdown", "value"),
-    prevent_initial_call="initial_duplicate",
-)
-def update_page(value):
-    if value == "Goal tracking":
-        HEADER.set_current_page(Page.GOAL_TRACKING)
-        return stm_page
-    else:
-        HEADER.set_current_page(Page.USAGE_STAT)
-        return USAGE_PAGE_VIEW.get_html_component()
-
-
-@app.callback(
-    Output("graphDiv", "children"),
-    Output("granularityText", "children"),
-    Input("timeInput", "value"),
-    Input("time", "value"),
-    Input("granularity", "value"),
-    Input("App", "value"),
+    Output("goal-graph", "children"),
+    Output("goal-time-input-text-granularity", "children"),
+    Input("goal-time-value-input", "value"),
+    Input("goal-time-input-unit-dropdown", "value"),
+    Input("goal-time-input-granularity-dropdown", "value"),
+    Input("goal-app-input-dropdown", "value"),
 )
 def update(timeInput, time, granularity, app):
     granularity_Text = "every day"
@@ -547,30 +342,30 @@ def update(timeInput, time, granularity, app):
 
 
 @app.callback(
-    Output("screenTimeMonitoring", "children"),
-    Input("infoButton", "n_clicks"),
-    Input("goBackButton", "n_clicks"),
+    Output("stm-help-container", "children"),
+    Input("info-button", "n_clicks"),
+    Input("go-back-button", "n_clicks"),
 )
 def display_page(info_clicks, back_clicks):
     ctx = dash.callback_context
     if not ctx.triggered:
-        return stm
+        return GOAL_AND_SCREEN_TIME_VIEW.build_screen_time_monitor_help()
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
-        if button_id == "infoButton":
-            return stm_exp
-        elif button_id == "goBackButton":
-            return stm
+        if button_id == "info-button":
+            return GOAL_AND_SCREEN_TIME_VIEW.build_screen_time_monitor_explanation()
+        elif button_id == "go-back-button":
+            return GOAL_AND_SCREEN_TIME_VIEW.build_screen_time_monitor_help()
 
 
 @app.callback(
-    Output("output-container", "children"),
+    Output("stm-output-container", "children"),
     [
         Input("add-value-button", "n_clicks"),
-        Input("time_stm", "value"),
-        Input("App_stm", "value"),
+        Input("stm-time-dropdown", "value"),
+        Input("stm-app-dropdown", "value"),
     ],
-    [State("input_stm", "value")],
+    [State("stm-input", "value")],
 )
 def add_value_to_dataframe(n_clicks, time_stm, app, value):
     prev_clicks = (
