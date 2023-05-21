@@ -220,6 +220,7 @@ app.layout = html.Div(id='Schedule-Input', children=[
     ]
     ),
     html.Div(html.Button('Submit', id='submit-schedule', n_clicks=0)),
+    html.Div(html.P(children=["Note: This schedule is used to rate your phone usage in day-in-review and week-in-review"])),
     html.Div(id='return', children=[])
 ])
 
