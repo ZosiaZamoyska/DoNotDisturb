@@ -230,6 +230,7 @@ def update(timeInput, time, granularity, app):
         fig.update_layout(yaxis_title='Usage', xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
         fig.update_layout(legend=dict(title=''))
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
         graph = dcc.Graph(id='graph', figure=fig)
     elif granularity == 'Month':
          df_graph = df[["Index", app]]
@@ -266,6 +267,7 @@ def update(timeInput, time, granularity, app):
          fig.update_layout(yaxis_title='Usage', xaxis_title=None)
          fig.update_layout(xaxis_tickangle=-45)
          fig.update_layout(legend=dict(title=''))
+         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
          graph = dcc.Graph(id='graph', figure=fig)
     return graph,granularity_Text
 
@@ -303,10 +305,12 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         if df_timeLimit.empty: 
             return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
                                                   html.H1(id='errorText', children=["NOTHING YET"])])
-        fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
+        fig = px.bar(df_timeLimit, x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
+        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         return dcc.Graph(id='graph_stm', figure=fig)
     elif isinstance(value, int) or value.isnumeric():
@@ -327,10 +331,12 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         df_timeLimit_ori.to_csv("stm_data.csv", index=False)
         df_timeLimit = df_timeLimit.fillna(0)
         df_timeLimit_ori = df_timeLimit_ori.fillna(0)
-        fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
+        fig = px.bar(df_timeLimit,x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
+        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         graph = dcc.Graph(id='graph_stm', figure=fig)
         return graph
@@ -340,10 +346,12 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         if df_timeLimit.empty: 
             return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
                                                   html.H1(id='errorText', children=["NOTHING YET"])])
-        fig = px.bar(df_timeLimit, y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
+        fig = px.bar(df_timeLimit, x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title=None)
+        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
         fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
         return dcc.Graph(id='graph_stm', figure=fig)
 
