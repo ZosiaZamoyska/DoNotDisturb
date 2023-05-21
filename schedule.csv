@@ -1,2 +1,5 @@
 Date,Category,From Hour,From Min,To Hour,To Min
-2023-05-21,Work,2,0,3,0
+2023-05-21,Sleep,0,0,8,0
+2023-05-21,Leisure,8,0,9,0
+2023-05-21,Work,9,0,17,0
+2023-05-21,Leisure,17,0,23,59
