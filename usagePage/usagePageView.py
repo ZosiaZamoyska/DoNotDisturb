@@ -26,9 +26,10 @@ class UsagePageView:
         unlock_widget = self._build_unlock_widget()
         emotion_emojis_widget = self._build_emotion_emojis_widget()
 
-        usage_stat_container = html.Div(
-            id="stat-container",
-            children=[
+        usage_stat_container = self._wrap_to_card(
+            "stat-container",
+            [
+                controller_widget,
                 review,
                 notification_widget,
                 pickup_widget,
@@ -39,7 +40,8 @@ class UsagePageView:
 
         page = html.Div(
             id="stat-page-container",
-            children=[controller_widget, usage_stat_container],
+            className="col-lg-6",
+            children=[usage_stat_container],
         )
 
         return page
@@ -48,7 +50,7 @@ class UsagePageView:
         div = html.Div(
             id="controller-container",
             children=[
-                html.H1("Usage Statistics", className="controller-title"),
+                html.H1("Usage Statistics", className="card-title"),
                 dcc.Dropdown(
                     id="app-dropdown",
                     options=UsageData.get_all_app_names(),
@@ -114,7 +116,7 @@ class UsagePageView:
 
         fig = px.imshow(z, text_auto=False, color_continuous_scale=color_scale)
         fig.layout.coloraxis.showscale = False
-        # fig.update_layout(width=1000, height=200)
+        fig.update_layout(height=400)
 
         # fig.update_layout(xaxis_range=[0,24])
         return dcc.Graph(id="graph", figure=fig)
@@ -179,12 +181,11 @@ class UsagePageView:
     def _build_usage_widget(
         self, id: str, title: str, number_times_occured: int, description: str
     ) -> html.Div:
-        div = html.Div(
-            id=id,
-            className="usage-widget",
-            children=[
-                html.P(title, className="usage-widget-title"),
-                html.P(number_times_occured, className="usage-widget-number"),
+        div = self._wrap_to_card(
+            id,
+            [
+                html.P(title, className="card-title"),
+                html.H1(number_times_occured, className="usage-widget-number"),
                 html.P(description, className="usage-widget-desc"),
             ],
         )
@@ -198,21 +199,25 @@ class UsagePageView:
         return div
 
     def _build_emotion_emojis_widget(self) -> html.Div:
-        div = html.Div(
-            id="emotion-emojis-widget",
-            children=[
+        div = self._wrap_to_card(
+            "emotion-emojis-widget",
+            [
                 html.P(
-                    f"While you are using {self.get_model().get_current_app_name()}, you felt..."
+                    className="card-title",
+                    children=f"While you are using {self.get_model().get_current_app_name()}, you felt...",
                 ),
                 html.Div(
-                    id="emojis-container",
+                    className="d-flex align-items-center flex-wrap justify-content-around",
                     children=list(
                         map(
                             lambda e: html.Div(
-                                className="emoji-container",
+                                className="d-inline-block",
                                 children=[
-                                    html.P(className="emoji", children=to_emoji(e)),
-                                    html.P(className="emotion", children=e.value),
+                                    html.P(
+                                        style={"font-size": "6em"},
+                                        children=to_emoji(e),
+                                    ),
+                                    html.H5(className="text-center", children=e.value),
                                 ],
                             ),
                             self.get_model().get_emotions(),
@@ -222,6 +227,18 @@ class UsagePageView:
             ],
         )
         return div
+
+    def _wrap_to_card(self, id, divs) -> html.Div:
+        return html.Div(
+            id=id,
+            className="card",
+            children=[
+                html.Div(
+                    className="card-body",
+                    children=divs,
+                )
+            ],
+        )
 
     def update(self):
         self._html_component = self._build_html_component()

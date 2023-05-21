@@ -6,6 +6,7 @@ from header import Header, Page
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from usagePage.enum import UsageTimeGranularity
 from usagePage.usagePageModel import UsagePageModel
 from usagePage.usagePageView import UsagePageView
 
@@ -33,25 +34,31 @@ df = pd.read_csv("data2.csv")
 
 ### Code begin
 
-current_page = GOAL_AND_SCREEN_TIME_VIEW.get_html_component()
+# current_page = GOAL_AND_SCREEN_TIME_VIEW.get_html_component()
 
 app.layout = html.Div(
-    children=[header, html.Div(id="page-container", children=[current_page])]
+    children=[
+        # header,
+        html.Div(
+            className="body-wrapper",
+            children=[
+                html.Div(
+                    className="container-fluid",
+                    children=[
+                        html.Div(
+                            id="page-container",
+                            className="row",
+                            children=[
+                                GOAL_AND_SCREEN_TIME_VIEW.get_html_component(),
+                                USAGE_PAGE_VIEW.get_html_component(),
+                            ],
+                        )
+                    ],
+                )
+            ],
+        )
+    ]
 )
-
-
-@app.callback(
-    Output("page-container", "children", allow_duplicate=True),
-    Input("page-dropdown", "value"),
-    prevent_initial_call="initial_duplicate",
-)
-def update_page(value):
-    if value == "Goal tracking":
-        HEADER.set_current_page(Page.GOAL_TRACKING)
-        return GOAL_AND_SCREEN_TIME_VIEW.get_html_component()
-    else:
-        HEADER.set_current_page(Page.USAGE_STAT)
-        return USAGE_PAGE_VIEW.get_html_component()
 
 
 @app.callback(
@@ -240,7 +247,7 @@ def update(timeInput, time, granularity, app):
                 max(df_days[app].max(), df_days["Goal"].max()) + timeInput,
             ]
         )
-        fig.update_layout(width=372, height=403)
+        fig.update_layout(height=403)
         fig.update_layout(yaxis_title="Usage", xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
         fig.update_layout(legend=dict(title=""))
@@ -333,7 +340,7 @@ def update(timeInput, time, granularity, app):
                 max(df_weeks[app].max(), df_weeks["Goal"].max()) + timeInput,
             ]
         )
-        fig.update_layout(width=372, height=403)
+        fig.update_layout(height=403)
         fig.update_layout(yaxis_title="Usage", xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
         fig.update_layout(legend=dict(title=""))
@@ -395,7 +402,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
             barmode="group",
             color_discrete_sequence=["#636EFA", "#EF553B"],
         )
-        fig.update_layout(width=372, height=403)
+        fig.update_layout(height=403)
         fig.update_layout(yaxis_title="Time (mins)", xaxis_title=None)
         fig.update_layout(
             legend=dict(
@@ -445,7 +452,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
             barmode="group",
             color_discrete_sequence=["#636EFA", "#EF553B"],
         )
-        fig.update_layout(width=372, height=403)
+        fig.update_layout(height=403)
         fig.update_layout(yaxis_title="Time (mins)", xaxis_title=None)
         fig.update_layout(
             legend=dict(
@@ -481,7 +488,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
             barmode="group",
             color_discrete_sequence=["#636EFA", "#EF553B"],
         )
-        fig.update_layout(width=372, height=403)
+        fig.update_layout(height=403)
         fig.update_layout(yaxis_title="Time (mins)", xaxis_title=None)
         fig.update_layout(
             legend=dict(
