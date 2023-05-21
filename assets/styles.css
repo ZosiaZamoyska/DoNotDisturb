@@ -1,3 +1,8 @@
+#DateScheduleInput{
+    display: inline-flex;
+    align-items: center;
+}
+
 #fromHour, #toHour{
     width: 60px;
     margin-right: 5px;
@@ -13,4 +18,6 @@
 #TimeScheduleInput{
     display: inline-flex;
     align-items: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }

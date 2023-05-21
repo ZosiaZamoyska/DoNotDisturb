@@ -2,6 +2,7 @@ import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
+from datetime import datetime
 import plotly.express as px
 import pandas as pd
 
@@ -9,6 +10,12 @@ app = dash.Dash(__name__)
 
 app.layout = html.Div(id='Schedule-Input', children=[
     html.H1(id='titleText', children=["Schedule Input"]),
+    html.Div(id='DateScheduleInput', children=[
+        html.P("Date:  "),
+        dcc.DatePickerSingle(
+            id='my-date-picker-single',
+            date= datetime.now().date()),
+    ]),
     html.H3(id = 'scheduleCategory', children=["Choose a category:"]),
     dcc.RadioItems(
     options=['Sleep', 'Work', 'Leisure'],
