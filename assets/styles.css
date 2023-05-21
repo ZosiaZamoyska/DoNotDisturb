@@ -1,0 +1,16 @@
+#fromHour, #toHour{
+    width: 60px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+#fromMins, #toMins{
+    width: 60px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+#TimeScheduleInput{
+    display: inline-flex;
+    align-items: center;
+}
