@@ -10,7 +10,8 @@ from usagePage.enum import UsageTimeGranularity
 from usagePage.usagePageModel import UsagePageModel
 from usagePage.usagePageView import UsagePageView
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, suppress_callback_exceptions=True)
+server = app.server
 
 HEADER = Header()
 header = HEADER.get_html_component()
