@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output
 from datetime import datetime
 import plotly.express as px
 import pandas as pd
+import os
 
 app = dash.Dash(__name__)
 
@@ -16,8 +17,9 @@ app.layout = html.Div(id='Schedule-Input', children=[
             id='my-date-picker-single',
             date= datetime.now().date()),
     ]),
-    html.H3(id = 'scheduleCategory', children=["Choose a category:"]),
+    html.H3(children=["Choose a category:"]),
     dcc.RadioItems(
+    id = 'scheduleCategory', 
     options=['Sleep', 'Work', 'Leisure'],
     value='Sleep',
     inline=True
@@ -218,7 +220,58 @@ app.layout = html.Div(id='Schedule-Input', children=[
     ]
     ),
     html.Div(html.Button('Submit', id='submit-schedule', n_clicks=0)),
+    html.Div(id='return', children=[])
 ])
+
+@app.callback(Output('return', 'children'),
+              [Input('submit-schedule', 'n_clicks')],
+              [dash.dependencies.State('my-date-picker-single', 'date'),
+               dash.dependencies.State('scheduleCategory', 'value'),
+               dash.dependencies.State('fromHour', 'value'),
+               dash.dependencies.State('fromMins', 'value'),
+               dash.dependencies.State('toHour', 'value'),
+               dash.dependencies.State('toMins', 'value')])
+
+def save_schedule(n_clicks, date, category, from_hour, from_min, to_hour, to_min):
+    from_hour = int(from_hour)
+    from_min = int(from_min)
+    to_hour = int(to_hour)
+    to_min = int(to_min)
+    if n_clicks > 0:
+        data = {
+            'Date': [date],
+            'Category': [category],
+            'From Hour': [from_hour],
+            'From Min': [from_min],
+            'To Hour': [to_hour],
+            'To Min': [to_min]
+        }
+        df_new = pd.DataFrame(data)
+    
+        # Check if the schedule.csv file exists
+        if os.path.isfile('schedule.csv'):
+            df_existing = pd.read_csv('schedule.csv')
+        
+            # Find rows with matching values for Date, From Hour, From Min, To Hour, and To Min
+            matching_rows = df_existing[
+                (df_existing['Date'] == date) &
+                (df_existing['From Hour'] == from_hour) &
+                (df_existing['From Min'] == from_min) &
+                (df_existing['To Hour'] == to_hour) &
+                (df_existing['To Min'] == to_min)
+            ]
+        
+            # Update the existing row if a match is found, otherwise append the new data
+            if not matching_rows.empty:
+                matching_indices = matching_rows.index
+
+                # Update the values using the matching indices
+                df_existing.loc[matching_indices] = df_new.values
+            else:
+                df_new = pd.concat([df_existing, df_new], ignore_index=True)
+    
+        df_new.to_csv('schedule.csv', index=False)
+    return html.Div()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
