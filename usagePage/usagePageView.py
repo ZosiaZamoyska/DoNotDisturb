@@ -31,10 +31,16 @@ class UsagePageView:
             [
                 controller_widget,
                 review,
-                html.Img(
+                html.Div(
+                    className="d-flex justify-content-center",
+                    children=html.Img(
                         id="scaleImg",
+                        className="inline-block",
                         src="assets/scale.png",
-                        width="200",),
+                        width="200",
+                    ),
+                    style={"margin-bottom": "2em"},
+                ),
                 notification_widget,
                 pickup_widget,
                 unlock_widget,
@@ -118,7 +124,20 @@ class UsagePageView:
                     z[days].append(colors[days][i])
         # print(z)
 
-        fig = px.imshow(z, color_continuous_scale=color_scale, labels=dict(x="Hour", y="Day of the week", color="Productivity"), y=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+        fig = px.imshow(
+            z,
+            color_continuous_scale=color_scale,
+            labels=dict(x="Hour", y="Day of the week", color="Productivity"),
+            y=[
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ],
+        )
         fig.layout.coloraxis.showscale = False
         fig.update_layout(height=400)
 
