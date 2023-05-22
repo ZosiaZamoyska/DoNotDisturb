@@ -11,7 +11,7 @@ from usagePage.enum import UsageTimeGranularity
 from usagePage.usagePageModel import UsagePageModel
 from usagePage.usagePageView import UsagePageView
 
-dash.register_page(__name__, path='/')
+dash.register_page(__name__, path="/")
 
 HEADER = Header()
 header = HEADER.get_html_component()
@@ -105,6 +105,7 @@ def update(timeInput, time, granularity, app):
                 children=[
                     html.Img(
                         id="errorImg",
+                        className="img-fluid",
                         src="https://img.freepik.com/premium-vector/hourglass-icon-comic-style-sandglass-cartoon-vector-illustration-white-isolated-background-clock-splash-effect-business-concept_157943-6412.jpg?w=2000",
                     ),
                     html.H1(id="errorText", children=["WAITING..."]),
@@ -121,6 +122,7 @@ def update(timeInput, time, granularity, app):
                 children=[
                     html.Img(
                         id="errorImg",
+                        className="img-fluid",
                         src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                     ),
                     html.H1(id="errorText", children=["TIME IS NOT APPROPRIATE!"]),
@@ -136,6 +138,7 @@ def update(timeInput, time, granularity, app):
                 children=[
                     html.Img(
                         id="errorImg",
+                        className="img-fluid",
                         src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                     ),
                     html.H1(id="errorText", children=["TIME SHOULD NOT BE 0!"]),
@@ -189,6 +192,7 @@ def update(timeInput, time, granularity, app):
                     children=[
                         html.Img(
                             id="errorImg",
+                            className="img-fluid",
                             src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                         ),
                         html.H1(id="errorText", children=["GOAL SET TOO LARGE"]),
@@ -283,6 +287,7 @@ def update(timeInput, time, granularity, app):
                     children=[
                         html.Img(
                             id="errorImg",
+                            className="img-fluid",
                             src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                         ),
                         html.H1(id="errorText", children=["GOAL SET TOO LARGE"]),
@@ -394,6 +399,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
                 children=[
                     html.Img(
                         id="errorImg",
+                        className="img-fluid",
                         src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                     ),
                     html.H1(id="errorText", children=["NOTHING YET"]),
@@ -431,6 +437,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
             children=[
                 html.Img(
                     id="errorImg",
+                    className="img-fluid",
                     src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                 ),
                 html.H1(id="errorText", children=["TIME SHOULD NOT BE 0!"]),
@@ -486,6 +493,7 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
                 children=[
                     html.Img(
                         id="errorImg",
+                        className="img-fluid",
                         src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000",
                     ),
                     html.H1(id="errorText", children=["NOTHING YET"]),
