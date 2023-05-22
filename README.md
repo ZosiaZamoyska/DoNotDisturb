@@ -19,7 +19,11 @@ Next three widgets inform the user about their habits regarding notifications, a
 
 The app runs based on app.py that includes html components of _Goal Tracking_ and _Usage Statistics_ and its callbacks. 
 _usagePage_ includes files related to _Usage Statistics_ page, including changing the data based on the callbacks (updating granularity of data in _usagePageModel.py_ and updating the widget view in _usagePageView.py_).
-To control header and switching between two pages, we implemented _header.py_. 
+To control header and switching between two pages, we implemented _header.py_.
+
+### Libraries and frameworks
+
+For data visualization, we use plotly express. We used dash to build our website, and a bootstrap to make our CSS better. 
 
 ## Access
 
