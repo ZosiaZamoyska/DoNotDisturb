@@ -150,7 +150,7 @@ class GoalAndScreenTimeView:
                         html.H6(
                             id="stm-help-text-2",
                             className="text-light",
-                            children=["Try screen time monitoring!"],
+                            children=["Try screen time monitoring below!"],
                         ),
                         html.Button(
                             id="info-button",
