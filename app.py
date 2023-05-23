@@ -14,7 +14,7 @@ app = dash.Dash(__name__)
 #stm stands for screen time monitoring
 stm = html.Div(id='stm', children = [  
         html.H2(id='stm_text1',children=["Not sure how much", html.Br(), "time limit to set?"]),
-        html.H3(id='stm_text2',children=["Try screen time monitoring",
+        html.H3(id='stm_text2',children=["Try screen time monitoring below",
                                          html.Button(id='infoButton')]),
         # html.Div(id='buttonDiv',children=[html.Button(id='do_stm_button', children=['GO'])]),
         html.Div(id='goBackDiv', style={'display': 'none'}, children=[html.Button(id='goBackButton')])
