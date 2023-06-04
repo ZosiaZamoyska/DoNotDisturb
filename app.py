@@ -6,8 +6,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd 
 import numpy as np 
+from datetime import date 
 
 df = pd.read_csv("data2.csv")
+
+processed_df = pd.read_csv("merged_data.csv")
+column_names = processed_df.columns.tolist()
+column_names.remove('Index')
+print(column_names)
 
 app = dash.Dash(__name__)
 
@@ -88,10 +94,7 @@ app.layout = html.Div([
                     dcc.Dropdown(
                         id = 'App',
                         options = [
-                            {'label': 'Total Usage', 'value': 'Total Usage'},
-                            {'label': 'Instagram', 'value': 'Instagram'},
-                            {'label': 'Facebook', 'value': 'Facebook'},
-                            {'label': 'YouTube', 'value': 'YouTube'}
+                            {'label': col, 'value': col} for col in column_names
                         ],
                         multi = False,
                         value = 'Total Usage',
@@ -138,10 +141,7 @@ app.layout = html.Div([
                     dcc.Dropdown(
                         id = 'App_stm',
                         options = [
-                            {'label': 'Total Usage', 'value': 'Total Usage'},
-                            {'label': 'Instagram', 'value': 'Instagram'},
-                            {'label': 'Facebook', 'value': 'Facebook'},
-                            {'label': 'YouTube', 'value': 'YouTube'}
+                            {'label': col, 'value': col} for col in column_names
                         ],
                         multi = False,
                         value = 'Total Usage',
@@ -174,6 +174,7 @@ app.layout = html.Div([
 
 def update(timeInput, time, granularity, app): 
     granularity_Text = "every day"
+    yaxis_title = "mins"
     if granularity == 'Month':
         granularity_Text = "every week"
 
@@ -193,17 +194,17 @@ def update(timeInput, time, granularity, app):
     if time == "hr(s)":
         timeInput = timeInput * 60
     if granularity == 'Week':
-        df_graph = df[["Index", app]]
+        df_graph = processed_df[["Index", app]]
         df_graph[app] = df_graph[app].fillna(0)
         df_graph = pd.concat([df_graph,
                       pd.DataFrame({"Index": ["Goal1", "Goal2", "Goal3", "Goal4", "Goal5", "Goal6", "Goal7"],
-                                    app: [df.loc[df['Index'] == "Day1", app].values[0],
-                                          df.loc[df['Index'] == "Day1", app].values[0] - timeInput,
-                                          df.loc[df['Index'] == "Day1", app].values[0] - 2*timeInput,
-                                          df.loc[df['Index'] == "Day1", app].values[0] - 3*timeInput,
-                                          df.loc[df['Index'] == "Day1", app].values[0] - 4*timeInput,
-                                          df.loc[df['Index'] == "Day1", app].values[0] - 5*timeInput,
-                                          df.loc[df['Index'] == "Day1", app].values[0] - 6*timeInput]})],
+                                    app: [processed_df.loc[processed_df['Index'] == "Day1", app].values[0],
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - timeInput,
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - 2*timeInput,
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - 3*timeInput,
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - 4*timeInput,
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - 5*timeInput,
+                                          processed_df.loc[processed_df['Index'] == "Day1", app].values[0] - 6*timeInput]})],
                      ignore_index=True)
         if (df_graph[app] < 0).any().any():
             return html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
@@ -217,6 +218,7 @@ def update(timeInput, time, granularity, app):
             df_days[app] = df_days[app]/60
             df_days["Goal"] = df_days["Goal"]/60
             timeInput = timeInput / 60
+            yaxis_title = "hrs"
         color_map = {'Good': '#65C089', 'Ok': '#FBD167', 'Bad': '#E16060'}
         fig = px.bar(df_days, x="Index", y=app, color="Rating", color_discrete_map=color_map, category_orders={'Index': ['Day1', 'Day2', 'Day3', 'Day4', 'Day5', 'Day6', 'Day7'], 'Rating': ['Good', 'Ok', 'Bad']})
         fig.add_scatter(x=df_days['Index'], y=df_days['Goal'], mode='markers',  marker=dict(color='black', size=15, symbol='line-ew-open'), name='Goal')
@@ -227,48 +229,54 @@ def update(timeInput, time, granularity, app):
             min_y_axis = 0
         fig.update_yaxes(range=[min_y_axis, max(df_days[app].max(), df_days['Goal'].max())+timeInput])
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Usage', xaxis_title=None)
+        fig.update_layout(yaxis_title='Usage (' + yaxis_title +')', xaxis_title=None)
         fig.update_layout(xaxis_tickangle=-45)
         fig.update_layout(legend=dict(title=''))
         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
         graph = dcc.Graph(id='graph', figure=fig)
     elif granularity == 'Month':
-         df_graph = df[["Index", app]]
-         df_graph[app] = df_graph[app].fillna(0)
-         df_graph = pd.concat([df_graph,
-                      pd.DataFrame({"Index": ["Goal1", "Goal2", "Goal3", "Goal4"],
-                                    app: [df.loc[df['Index'] == "Week1", app].values[0],
-                                          df.loc[df['Index'] == "Week1", app].values[0] - timeInput,
-                                          df.loc[df['Index'] == "Week1", app].values[0] - 2*timeInput,
-                                          df.loc[df['Index'] == "Week1", app].values[0] - 3*timeInput]})],
-                     ignore_index=True)
-         if (df_graph[app] < 0).any().any():
-            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+        if (app in ['Total Usage', 'Instagram', 'Facebook', 'YouTube']):
+            df_graph = df[["Index", app]]
+            df_graph[app] = df_graph[app].fillna(0)
+            df_graph = pd.concat([df_graph,
+                        pd.DataFrame({"Index": ["Goal1", "Goal2", "Goal3", "Goal4"],
+                                        app: [df.loc[df['Index'] == "Week1", app].values[0],
+                                            df.loc[df['Index'] == "Week1", app].values[0] - timeInput,
+                                            df.loc[df['Index'] == "Week1", app].values[0] - 2*timeInput,
+                                            df.loc[df['Index'] == "Week1", app].values[0] - 3*timeInput]})],
+                        ignore_index=True)
+            if (df_graph[app] < 0).any().any():
+                return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
                                                   html.H1(id='errorText', children=["GOAL SET TOO LARGE"])]), granularity_Text
-         df_weeks = df_graph.loc[(df_graph['Index'] >= 'Week1') & (df_graph['Index'] <= 'Week4')].reset_index(drop=True)
-         df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal4')].reset_index(drop=True)
-         df_weeks.loc[:, "Goal"] = df_goals[app]
-         df_weeks['Rating'] = np.where(df_weeks[app] <= df_weeks['Goal'], 'Good',
-                        np.where(df_weeks[app] <= 1.1*df_weeks['Goal'], 'Ok', 'Bad'))
-         if df_weeks[app].min() > 60 or df_weeks["Goal"].min() > 60:
-            df_weeks[app] = df_weeks[app]/60
-            df_weeks["Goal"] = df_weeks["Goal"]/60
-            timeInput = timeInput / 60
-         color_map = {'Good': '#65C089', 'Ok': '#FBD167', 'Bad': '#E16060'}
-         fig = px.bar(df_weeks, x="Index", y=app, color="Rating", color_discrete_map=color_map, category_orders={'Index': ['Week1', 'Week2', 'Week3', 'Week4'], 'Rating': ['Good', 'Ok', 'Bad']})
-         fig.add_scatter(x=df_weeks['Index'], y=df_weeks['Goal'], mode='markers',  marker=dict(color='black', size=30, symbol='line-ew-open'), name='Goal')
-         fig.add_annotation(x="Week1", y=df_weeks.loc[df_weeks["Index"] == "Week1", app].iloc[0], text="You start here", showarrow=True, font=dict(size=8, color='black'))
-         min_val = df_weeks.loc[df_weeks[app] > 0, app].min()
-         min_y_axis = min(min_val, df_weeks['Goal'].min()) - timeInput
-         if min_y_axis < 0:
-            min_y_axis = 0
-         fig.update_yaxes(range=[min_y_axis, max(df_weeks[app].max(), df_weeks['Goal'].max())+timeInput])
-         fig.update_layout(width=372, height=403)
-         fig.update_layout(yaxis_title='Usage', xaxis_title=None)
-         fig.update_layout(xaxis_tickangle=-45)
-         fig.update_layout(legend=dict(title=''))
-         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
-         graph = dcc.Graph(id='graph', figure=fig)
+            df_weeks = df_graph.loc[(df_graph['Index'] >= 'Week1') & (df_graph['Index'] <= 'Week4')].reset_index(drop=True)
+            df_goals = df_graph.loc[(df_graph['Index'] >= 'Goal1') & (df_graph['Index'] <= 'Goal4')].reset_index(drop=True)
+            df_weeks.loc[:, "Goal"] = df_goals[app]
+            df_weeks['Rating'] = np.where(df_weeks[app] <= df_weeks['Goal'], 'Good',
+                            np.where(df_weeks[app] <= 1.1*df_weeks['Goal'], 'Ok', 'Bad'))
+            if df_weeks[app].min() > 60 or df_weeks["Goal"].min() > 60:
+                df_weeks[app] = df_weeks[app]/60
+                df_weeks["Goal"] = df_weeks["Goal"]/60
+                timeInput = timeInput / 60
+                yaxis_title = "hrs"
+            color_map = {'Good': '#65C089', 'Ok': '#FBD167', 'Bad': '#E16060'}
+            fig = px.bar(df_weeks, x="Index", y=app, color="Rating", color_discrete_map=color_map, category_orders={'Index': ['Week1', 'Week2', 'Week3', 'Week4'], 'Rating': ['Good', 'Ok', 'Bad']})
+            fig.add_scatter(x=df_weeks['Index'], y=df_weeks['Goal'], mode='markers',  marker=dict(color='black', size=30, symbol='line-ew-open'), name='Goal')
+            fig.add_annotation(x="Week1", y=df_weeks.loc[df_weeks["Index"] == "Week1", app].iloc[0], text="You start here", showarrow=True, font=dict(size=8, color='black'))
+            min_val = df_weeks.loc[df_weeks[app] > 0, app].min()
+            min_y_axis = min(min_val, df_weeks['Goal'].min()) - timeInput
+            if min_y_axis < 0:
+                min_y_axis = 0
+            fig.update_yaxes(range=[min_y_axis, max(df_weeks[app].max(), df_weeks['Goal'].max())+timeInput])
+            fig.update_layout(width=372, height=403)
+            fig.update_layout(yaxis_title='Usage (' + yaxis_title +')', xaxis_title=None)
+            fig.update_layout(xaxis_tickangle=-45)
+            fig.update_layout(legend=dict(title=''))
+            fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
+            graph = dcc.Graph(id='graph', figure=fig)
+        else:
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
+                                                  html.H1(id='errorText', children=["NO DATA FOUND"])]), granularity_Text
+
     return graph,granularity_Text
 
 @app.callback(
@@ -325,9 +333,9 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         add_value_to_dataframe.prev_clicks = n_clicks
         df_timeLimit_ori = pd.read_csv("stm_data.csv")
         df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
-        new_row = pd.DataFrame({"App": [app], "TimeLimit(mins)": [value]})
+        new_row = pd.DataFrame({"App": [app], "TimeLimit(mins)": [value], "Date": [date.today()]})
         df_timeLimit = pd.concat([df_timeLimit, new_row], ignore_index=True)
-        df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)"]] = [app, value]
+        df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)", "Date"]] = [app, value, date.today()]
         df_timeLimit_ori.to_csv("stm_data.csv", index=False)
         df_timeLimit = df_timeLimit.fillna(0)
         df_timeLimit_ori = df_timeLimit_ori.fillna(0)
