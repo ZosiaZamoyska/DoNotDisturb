@@ -227,7 +227,7 @@ class UsagePageView:
             [
                 html.P(
                     className="card-title",
-                    children=f"While you are using {self.get_model().get_current_app_name()}, you felt...",
+                    children=f"While you are using {self.get_model().get_current_app_name()}, you mostly felt...",
                 ),
                 html.Div(
                     className="d-flex align-items-center flex-wrap justify-content-around",
