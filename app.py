@@ -41,6 +41,7 @@ stm_page = html.Div()
 
 
 app.layout = html.Div([
+    html.Div(html.P(children=["Discover the effectiveness of our goal-setting approach, enabling you to make gradual progress in reducing phone usage through small, manageable steps."])),
     html.Div(className='goalInput', 
             children=[html.P(id='text1', children=["I want to reduce usage by "]),
                       dcc.Input(id='timeInput', value=5, type='number', style={
