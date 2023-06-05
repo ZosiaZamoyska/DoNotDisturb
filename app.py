@@ -13,7 +13,6 @@ df = pd.read_csv("data2.csv")
 processed_df = pd.read_csv("merged_data.csv")
 column_names = processed_df.columns.tolist()
 column_names.remove('Index')
-print(column_names)
 
 app = dash.Dash(__name__)
 
@@ -307,19 +306,28 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
     prev_clicks = add_value_to_dataframe.prev_clicks if hasattr(add_value_to_dataframe, 'prev_clicks') else 0
     df_timeLimit_ori = pd.read_csv("stm_data.csv")
     df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+    yaxis_title = "mins"
     if value is None:
         df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_realUsage = pd.read_csv("realUsage_Data.csv")
+        df_realUsage = df_realUsage[["Date", app]]
         df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        merged_df = pd.merge(df_realUsage, df_timeLimit, on='Date', how='right')
+        merged_df['Date'] = merged_df['Date'].astype(str)
+        if merged_df[app].min() > 60 or merged_df["TimeLimit(mins)"].min() > 60:
+                merged_df[app] = merged_df[app]/60
+                merged_df["TimeLimit(mins)"] = merged_df["TimeLimit(mins)"]/60
+                yaxis_title = "hrs"
         if df_timeLimit.empty: 
-            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
-                                                  html.H1(id='errorText', children=["NOTHING YET"])])
-        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
-        fig = px.bar(df_timeLimit, x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://cdn0.iconfinder.com/data/icons/man-using-phone/141/man-using-phone-person-030-512.png'),
+                                                  html.H1(id='errorText', children=["NO ACTIVITY YET"])])
+        fig = px.bar(merged_df, x='Date', y=['TimeLimit(mins)', app], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        fig.update_layout(xaxis={'type': 'category'})
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
+        fig.update_layout(yaxis_title='Time ('+yaxis_title+')', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
-        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
+        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace(app, "Real Usage")))
         return dcc.Graph(id='graph_stm', figure=fig)
     elif isinstance(value, int) or value.isnumeric():
         value = float(value)
@@ -333,34 +341,50 @@ def add_value_to_dataframe(n_clicks, time_stm, app, value):
         add_value_to_dataframe.prev_clicks = n_clicks
         df_timeLimit_ori = pd.read_csv("stm_data.csv")
         df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        df_realUsage = pd.read_csv("realUsage_Data.csv")
+        df_realUsage = df_realUsage[["Date", app]]
         new_row = pd.DataFrame({"App": [app], "TimeLimit(mins)": [value], "Date": [date.today()]})
         df_timeLimit = pd.concat([df_timeLimit, new_row], ignore_index=True)
         df_timeLimit_ori.loc[len(df_timeLimit_ori), ["App", "TimeLimit(mins)", "Date"]] = [app, value, date.today()]
         df_timeLimit_ori.to_csv("stm_data.csv", index=False)
-        df_timeLimit = df_timeLimit.fillna(0)
-        df_timeLimit_ori = df_timeLimit_ori.fillna(0)
-        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
-        fig = px.bar(df_timeLimit,x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        # df_timeLimit = df_timeLimit.fillna(0)
+        # df_timeLimit_ori = df_timeLimit_ori.fillna(0)
+        merged_df = pd.merge(df_realUsage, df_timeLimit, on='Date', how='right')
+        merged_df['Date'] = merged_df['Date'].astype(str)
+        if merged_df[app].min() > 60 or merged_df["TimeLimit(mins)"].min() > 60:
+                merged_df[app] = merged_df[app]/60
+                merged_df["TimeLimit(mins)"] = merged_df["TimeLimit(mins)"]/60
+                yaxis_title = "hrs"
+        fig = px.bar(merged_df,x='Date', y=['TimeLimit(mins)', app], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        fig.update_layout(xaxis={'type': 'category'})
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
+        fig.update_layout(yaxis_title='Time ('+yaxis_title+')', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
-        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
+        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace(app, "Real Usage")))
         graph = dcc.Graph(id='graph_stm', figure=fig)
         return graph
     elif n_clicks == prev_clicks:
         df_timeLimit_ori = pd.read_csv("stm_data.csv")
+        df_realUsage = pd.read_csv("realUsage_Data.csv")
+        df_realUsage = df_realUsage[["Date", app]]
         df_timeLimit = df_timeLimit_ori.loc[df_timeLimit_ori["App"] == app]
+        merged_df = pd.merge(df_realUsage, df_timeLimit, on='Date', how='right')
+        merged_df['Date'] = merged_df['Date'].astype(str)
+        if merged_df[app].min() > 60 or merged_df["TimeLimit(mins)"].min() > 60:
+                merged_df[app] = merged_df[app]/60
+                merged_df["TimeLimit(mins)"] = merged_df["TimeLimit(mins)"]/60
+                yaxis_title = "hrs"
         if df_timeLimit.empty: 
-            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg?w=2000'),
-                                                  html.H1(id='errorText', children=["NOTHING YET"])])
-        df_timeLimit['x_values'] = range(1, len(df_timeLimit) + 1)
-        fig = px.bar(df_timeLimit, x='x_values', y=['TimeLimit(mins)', 'RealUsage'], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+            return  html.Div(id='errorDiv', children=[html.Img(id = 'errorImg', src='https://cdn0.iconfinder.com/data/icons/man-using-phone/141/man-using-phone-person-030-512.png'),
+                                                  html.H1(id='errorText', children=["NO ACTIVITY YET"])])
+        fig = px.bar(merged_df, x='Date', y=['TimeLimit(mins)', app], barmode='group', color_discrete_sequence=['#636EFA', '#EF553B'])
+        fig.update_layout(xaxis={'type': 'category'})
         fig.update_layout(width=372, height=403)
-        fig.update_layout(yaxis_title='Time (mins)', xaxis_title='Trial')
+        fig.update_layout(yaxis_title='Time ('+yaxis_title+')', xaxis_title='Trial')
         fig.update_layout(legend=dict(title=None,))
         fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
-        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace("RealUsage", "Real Usage")))
+        fig.for_each_trace(lambda trace: trace.update(name=trace.name.replace("TimeLimit(mins)", "Time Limit").replace(app, "Real Usage")))
         return dcc.Graph(id='graph_stm', figure=fig)
 
 
