@@ -2,6 +2,10 @@ import pandas as pd
 from dash import dcc, html
 
 df_time_limit = pd.DataFrame(columns=["TimeLimit"])
+processed_df = pd.read_csv("merged_data.csv")
+column_names = processed_df.columns.tolist()
+column_names.remove('Index')
+
 
 
 class GoalAndScreenTimeView:
@@ -260,10 +264,7 @@ is the duration the users are mostly likely to adhere to. """
         # TODO: Replace this with actual list of app from model class
         # return self.getModel().getListOfApps()
         return [
-            {"label": "Total Usage", "value": "Total Usage"},
-            {"label": "Instagram", "value": "Instagram"},
-            {"label": "Facebook", "value": "Facebook"},
-            {"label": "YouTube", "value": "YouTube"},
+            {'label': col, 'value': col} for col in column_names                 
         ]
 
     def _wrap_to_card(self, id, divs) -> html.Div:
