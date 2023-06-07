@@ -259,7 +259,7 @@ layout = html.Div(
                     html.Div(
                         html.P(
                             children=[
-                                "Note: This schedule is used to rate your phone usage in day-in-review and week-in-review"
+                                "Note: This schedule is used to rate your phone usage in week-in-review"
                             ]
                         )
                     ),
