@@ -438,7 +438,9 @@ class UsagePageView:
         fig.update_layout(yaxis={'type': 'category'})
 
         # fig.update_layout(xaxis_range=[0,24])
-        return dcc.Graph(id="graph", figure=fig)
+        return html.Div(children = [
+            html.H6(style={"padding-top": "1em", "font-size":"1.2em"},children=["Week in review"]),
+            dcc.Graph(id="graph", figure=fig)])
 
     def _build_notification_widget(self):
         try:
